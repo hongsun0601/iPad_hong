@@ -65,3 +65,36 @@ function hideSearch() {
     searchDelayEls.reverse()
     searchInputEl.value = ''
 }
+
+const io =new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+        if (!entry.isIntersecting) {
+            return
+        }
+        entry.target.classList.add('show')
+    })
+})
+
+const infoEls = document.querySelectorAll('.info')
+  infoEls.forEach(function (el) {
+    io.observe(el)
+  })
+
+
+//   video
+
+const video  = document.querySelector('.stage video')
+const playBtn = document.querySelector('.stage .controller--play')
+const pauseBtn = document.querySelector('.stage .controller--pause')
+
+playBtn.addEventListener('click', function () {
+    video.play()
+    playBtn.classList.add('hide')
+    pauseBtn.classList.remove('hide')
+})
+
+pauseBtn.addEventListener('click', function () {
+    video.pause()
+    playBtn.classList.remove('hide')
+    pauseBtn.classList.add('hide')
+})
