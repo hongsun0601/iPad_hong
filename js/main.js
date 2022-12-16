@@ -73,6 +73,41 @@ function hideSearch() {
     searchDelayEls.reverse()
     searchInputEl.value = ''
 }
+function playScroll () {
+    document.documentElement.classList.remove('fixed')
+}
+function stopScroll () {
+    document.documentElement.classList.add('fixed')
+}
+
+const menuStarterEl = document.querySelector('header .menu-starter')
+menuStarterEl.addEventListener('click', function () {
+    if (headerEl.classList.contains('menuing')) {
+        headerEl.classList.remove('menuing')
+        playScroll()
+    }else {
+        headerEl.classList.add('menuing')
+        stopScroll()
+    }
+})
+
+const searchTextFieldEl = document.querySelector('header .textfield')
+const searchCancelEl = document.querySelector('header .search-canceler')
+searchTextFieldEl.addEventListener('click', function () {
+    headerEl.classList.add('searching--mobile')
+})
+searchCancelEl.addEventListener('click', function () {
+    headerEl.classList.remove('searching--mobile')
+})
+
+window.addEventListener('resize', function () {
+    if (window.innerWidth <= 740) {
+        headerEl.classList.remove('searching')
+        searchInputEl.focus()
+    }else {
+        headerEl.classList.remove('searching--mobile')
+    }
+})
 
 const io =new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
