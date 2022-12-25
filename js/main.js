@@ -73,19 +73,20 @@ function hideSearch() {
     searchDelayEls.reverse()
     searchInputEl.value = ''
 }
-function playScroll () {
+function playScroll() {
     document.documentElement.classList.remove('fixed')
 }
-function stopScroll () {
+function stopScroll() {
     document.documentElement.classList.add('fixed')
 }
 
 const menuStarterEl = document.querySelector('header .menu-starter')
-menuStarterEl.addEventListener('click', function () {
+menuStarterEl.addEventListener('click', () => {
     if (headerEl.classList.contains('menuing')) {
         headerEl.classList.remove('menuing')
+        searchInputEl.value = ''
         playScroll()
-    }else {
+    } else {
         headerEl.classList.add('menuing')
         stopScroll()
     }
@@ -93,23 +94,48 @@ menuStarterEl.addEventListener('click', function () {
 
 const searchTextFieldEl = document.querySelector('header .textfield')
 const searchCancelEl = document.querySelector('header .search-canceler')
-searchTextFieldEl.addEventListener('click', function () {
+searchTextFieldEl.addEventListener('click', () => {
     headerEl.classList.add('searching--mobile')
+    searchInputEl.focus()
 })
-searchCancelEl.addEventListener('click', function () {
+searchCancelEl.addEventListener('click', () => {
     headerEl.classList.remove('searching--mobile')
 })
 
-window.addEventListener('resize', function () {
+
+window.addEventListener('resize', event => {
     if (window.innerWidth <= 740) {
         headerEl.classList.remove('searching')
-        searchInputEl.focus()
-    }else {
+    } else {
         headerEl.classList.remove('searching--mobile')
     }
 })
 
-const io =new IntersectionObserver(function (entries) {
+
+
+const navEl = document.querySelector('nav')
+const navMenuToggleEl = navEl.querySelector('.menu-toggler')
+const navMenuShadowEl = navEl.querySelector('.shadow')
+navMenuToggleEl.addEventListener('click', () => {
+    if (navEl.classList.contains('menuing')) {
+        hideNavMenu()
+    } else {
+        showNavMenu()
+    }
+})
+navEl.addEventListener('click', event => {
+    event.stopPropagation()
+})
+navMenuShadowEl.addEventListener('click', hideNavMenu)
+window.addEventListener('click', hideNavMenu)
+function showNavMenu() {
+    navEl.classList.add('menuing')
+}
+function hideNavMenu() {
+    navEl.classList.remove('menuing')
+}
+
+const io = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
         if (!entry.isIntersecting) {
             return
@@ -119,14 +145,14 @@ const io =new IntersectionObserver(function (entries) {
 })
 
 const infoEls = document.querySelectorAll('.info')
-  infoEls.forEach(function (el) {
+infoEls.forEach(function (el) {
     io.observe(el)
-  })
+})
 
 
 //   video
 
-const video  = document.querySelector('.stage video')
+const video = document.querySelector('.stage video')
 const playBtn = document.querySelector('.stage .controller--play')
 const pauseBtn = document.querySelector('.stage .controller--pause')
 
@@ -172,17 +198,17 @@ ipads.forEach(function (ipad) {
 
 const navigationsEl = document.querySelector('footer .navigations')
 navigations.forEach(nav => {
-  const mapEl = document.createElement('div')
-  mapEl.classList.add('map')
+    const mapEl = document.createElement('div')
+    mapEl.classList.add('map')
 
-  let mapList = ''
-  nav.maps.forEach(map => {
-    mapList +=  `<li>
+    let mapList = ''
+    nav.maps.forEach(map => {
+        mapList += `<li>
       <a href="${map.url}">${map.name}</a>
     </li>`
-  })
+    })
 
-  mapEl.innerHTML = /* html */ `
+    mapEl.innerHTML = /* html */ `
     <h3>
       <span class="text">${nav.title}</span>
       <span class="icon">+</span>
@@ -192,9 +218,17 @@ navigations.forEach(nav => {
     </ul>
   `
 
-  navigationsEl.append(mapEl)
+    navigationsEl.append(mapEl)
 })
 
 
 const thisYearEl = document.querySelector('span.this-year')
 thisYearEl.textContent = new Date().getFullYear()
+
+const mapEls = document.querySelectorAll('footer .navigations .map')
+mapEls.forEach(function (el) {
+    const h3El = el.querySelector('h3')
+    h3El.addEventListener('click', function () {
+        el.classList.toggle('active')
+    })
+})
